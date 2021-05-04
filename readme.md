@@ -12,21 +12,31 @@ It leverages the akka streams + akka alpakka libraries to minimize the code need
 Moreover, everything can be configured easily with Hocon.
 Either via .conf file or as CONFIG_FORCE_* variables in a container. The minimal configuration needed is presented in ./src/main/resources/application.conf
 
-To add and override configs with external configurations run:
+### Docker / Jib
 
-    ./gradlew jar
-    java -jar -Dconfig.file=./path/to/config.conf ./build/libs/alpakka-kafka-mirror-1.0.0.jar
-
-
-Or build the image for your local image repo by running
+Build the image for your local image repo by running
 
     ./gradlew jibDockerBuild
 
-and override configs when running the containerized application, configure env variables as follows.
-    
-    ...
-    CONFIG_FORCE_topic_in=some-other-topic
-    ...
+run container
+
+    docker run --network=host alpakka-kafka-mirror
+
+consider overriding configs when running the containerized application, configure env variables as follows.
+
+    docker run -e CONFIG_FORCE_topic_in=some-other-input-topic --network=host alpakka-kafka-mirror
+
+### Jar
+
+To run create and run jar directly
+
+    ./gradlew shadowJar
+    java -jar ./build/libs/alpakka-kafka-mirror-1.0.0-all.jar
+
+or with external config override:
+
+    ./gradlew shadowJar
+    java -jar -Dconfig.file=./path/to/config.conf ./build/libs/alpakka-kafka-mirror-1.0.0-all.jar
 
 #### Example
 
